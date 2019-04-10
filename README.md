@@ -15,6 +15,14 @@ Supported features include:
 Usage
 
 If you want to check out the parser:
+    
+    Compilation:
+    bison -d luaparser.y
+    flex lex.l 
+    gcc lex.yy.c luaparser.tab.c -o op
+    
+    Run the -o file:
+    ./op
 
     
 
