@@ -1,0 +1,297 @@
+function fact (n)
+  if n == 0 then
+    return 1
+  else      
+    return n * fact(n-1)
+end
+
+for var_1,var_n in explist do block=2 end
+ 
+ do
+       local f, s, var = explist
+       while true do
+         local var_1, var_n = f(s, var)
+         var = var_1
+         if var == nil then break end
+         block=2
+       end
+end
+
+
+f()                -- adjusted to 0 results
+     g(f(), x)          -- f() is adjusted to 1 result
+     g(x, f())          -- g gets x plus all results from f()
+     a,b,c = f(), x     -- f() is adjusted to 1 result (c gets nil)
+     a,b = ...          -- a gets the first vararg parameter, b gets
+                        -- the second (both a and b can get nil if there
+                        -- is no corresponding vararg parameter)
+     
+     a,b,c = x, f()     -- f() is adjusted to 2 results
+     a,b,c = f()        -- f() is adjusted to 3 result
+     return x,y,f()     -- returns x, y, and all results from f()
+     {f()}              -- creates a list with all results from f()
+     {...}              -- creates a list with all vararg parameters
+     {f(), nil}         -- f() is adjusted to 1 result
+end
+
+
+ do
+     local var, limit, step = tonumber(e1), tonumber(e2), tonumber(e3)
+     if not (var and limit and step) then error() end
+     while (step > 0 and var <= limit) or (step <= 0 and var >= limit) do
+       local v = var
+       block=2
+       var = var + step
+     end
+   end
+
+do
+       local t = {}
+       t[f(1)] = g
+       t[1] = "x"         -- 1st exp
+       t[2] = "y"         -- 2nd exp
+       t.x = 1            -- t["x"] = 1
+       t[3] = f(x)        -- 3rd exp
+       t[30] = 23
+       t[4] = 45          -- 4th exp
+       a = t
+     end 
+
+
+a = f
+     (g).x(a)
+
+
+ function f(a, b) end
+     function g(a, b, ...) end
+     function r() return 1,2,3 end
+
+x = 10                -- global variable
+     do                    -- new block
+       local x = x         -- new 'x', with value 10
+       print(x)            --> 10
+       x = x+1
+       do                  -- another block
+         local x = x+1     -- another 'x'
+         print(x)          --> 12
+       end
+       print(x)            --> 11
+     end
+     print(x)              --> 10  (the global one)
+
+ a = {}
+     local x = 20
+     for i=1,10 do
+       local y = 0
+       a[i] = function () y=y+1; return x+y end
+     end
+
+
+function getbinhandler (op1, op2, event)
+       return metatable(op1)[event] or metatable(op2)[event]
+     end
+
+  function add_event (op1, op2)
+       local o1, o2 = tonumber(op1), tonumber(op2)
+       if o1 and o2 then  -- both operands are numeric?
+         return o1 + o2   -- '+' here is the primitive 'add'
+       else  -- at least one of the operands is not numeric
+         local h = getbinhandler(op1, op2, "__add")
+         if h then
+           -- call the handler with both operands
+           return (h(op1, op2))
+         else  -- no handler available: default behavior
+           error(···)
+         end
+       end
+     end
+
+
+   function unm_event (op)
+       local o = tonumber(op)
+       if o then  -- operand is numeric?
+         return -o  -- '-' here is the primitive 'unm'
+       else  -- the operand is not numeric.
+         -- Try to get a handler from the operand
+         local h = metatable(op).__unm
+         if h then
+           -- call the handler with the operand
+           return (h(op))
+         else  -- no handler available: default behavior
+           error(···)
+         end
+       end
+     end
+
+          function concat_event (op1, op2)
+       if (type(op1) == "string" or type(op1) == "number") and
+          (type(op2) == "string" or type(op2) == "number") then
+         return op1 .. op2  -- primitive string concatenation
+       else
+         local h = getbinhandler(op1, op2, "__concat")
+         if h then
+           return (h(op1, op2))
+         else
+           error(···)
+         end
+       end
+     end
+
+
+
+     function len_event (op)
+       if type(op) == "string" then
+         return strlen(op)         -- primitive string length
+       elseif type(op) == "table" then
+         return #op                -- primitive table length
+       else
+         local h = metatable(op).__len
+         if h then
+           -- call the handler with the operand
+           return (h(op))
+         else  -- no handler available: default behavior
+           error(···)
+         end
+       end
+     end
+function getcomphandler (op1, op2, event)
+       if type(op1) ~= type(op2) then return nil end
+       local mm1 = metatable(op1)[event]
+       local mm2 = metatable(op2)[event]
+       if mm1 == mm2 then return mm1 else return nil end
+     end                                             
+
+
+function eq_event (op1, op2)
+       if type(op1) ~= type(op2) then  -- different types?
+         return false   -- different objects
+       end
+       if op1 == op2 then   -- primitive equal?
+         return true   -- objects are equal
+       end
+       -- try metamethod
+       local h = getcomphandler(op1, op2, "__eq")
+       if h then
+         return (h(op1, op2))
+       else
+         return false
+       end
+     end
+
+
+     function lt_event (op1, op2)
+       if type(op1) == "number" and type(op2) == "number" then
+         return op1 < op2   -- numeric comparison
+       elseif type(op1) == "string" and type(op2) == "string" then
+         return op1 < op2   -- lexicographic comparison
+       else
+         local h = getcomphandler(op1, op2, "__lt")
+         if h then
+           return (h(op1, op2))
+         else
+           error(···)
+         end
+       end
+     end
+
+
+      function le_event (op1, op2)
+       if type(op1) == "number" and type(op2) == "number" then
+         return op1 <= op2   -- numeric comparison
+       elseif type(op1) == "string" and type(op2) == "string" then
+         return op1 <= op2   -- lexicographic comparison
+       else
+         local h = getcomphandler(op1, op2, "__le")
+         if h then
+           return (h(op1, op2))
+         else
+           h = getcomphandler(op1, op2, "__lt")
+           if h then
+             return not h(op2, op1)
+           else
+             error(···)
+           end
+         end
+       end
+     end
+
+
+          function gettable_event (table, key)
+       local h
+       if type(table) == "table" then
+         local v = rawget(table, key)
+         if v ~= nil then return v end
+         h = metatable(table).__index
+         if h == nil then return nil end
+       else
+         h = metatable(table).__index
+         if h == nil then
+           error(···)
+         end
+       end
+       if type(h) == "function" then
+         return (h(table, key))     -- call the handler
+       else return h[key]           -- or repeat operation on it
+       end
+     end
+
+
+          function settable_event (table, key, value)
+       local h
+       if type(table) == "table" then
+         local v = rawget(table, key)
+         if v ~= nil then rawset(table, key, value); return end
+         h = metatable(table).__newindex
+         if h == nil then rawset(table, key, value); return end
+       else
+         h = metatable(table).__newindex
+         if h == nil then
+           error(···)
+         end
+       end
+       if type(h) == "function" then
+         h(table, key,value)           -- call the handler
+       else h[key] = value             -- or repeat operation on it
+       end
+     end
+
+          function function_event (func, ...)
+       if type(func) == "function" then
+         return func(...)   -- primitive call
+       else
+         local h = metatable(func).__call
+         if h then
+           return h(func, ...)
+         else
+           error(···)
+         end
+       end
+     end
+
+
+           function gc_event (udata)
+       local h = metatable(udata).__gc
+       if h then
+         h(udata)
+       end
+     end
+
+
+ function foo (a)
+       print("foo", a)
+       return coroutine.yield(2*a)
+     end
+     
+     co = coroutine.create(function (a,b)
+           print("co-body", a, b)
+           local r = foo(a+1)
+           print("co-body", r)
+           local r, s = coroutine.yield(a+b, a-b)
+           print("co-body", r, s)
+           return b, "end"
+     end)
+            
+     print("main", coroutine.resume(co, 1, 10))
+     print("main", coroutine.resume(co, "r"))
+     print("main", coroutine.resume(co, "x", "y"))
+     print("main", coroutine.resume(co, "x", "y"))  
